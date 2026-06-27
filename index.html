@@ -520,6 +520,22 @@ function renderResult(){
 /* ============ §10 텔레그램 전송 ============ */
 var TG_TOKEN='8952423488:AAFt80Euv3D-XYySgyx2rr4q3MIp7NGojlM';
 var TG_CHAT='8842851328';
+var GS_URL='https://script.google.com/macros/s/AKfycbz_c7VEn5tzsiS1yRgO4X6beu0BegqSzFHTydlzV7hPOAtI8ZI0jcaATE3HUCKN0ZV0-g/exec';
+function saveToSheet(name,phone,company,wtime){
+  try{
+    var s=S, payload={
+      name:name, phone:phone, company:company, wtime:wtime,
+      strategy:R.code+' '+R.strategy, grade:R.gico+' '+R.grade,
+      limit:fmt(R.limit), ownReal:fmt(R.ownReal), saving:fmt(R.saving),
+      retained:fmt(s.retained), capital:fmt(s.capital||0), gaji:fmt(s.gajigeumgeum),
+      shareRatio:fmt(s.shareRatio), spouse:s.spouse, giftHistory:s.giftHistory,
+      treasury:s.treasury, industry:s.industry, timeline:s.timeline
+    };
+    fetch(GS_URL,{method:'POST',mode:'no-cors',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify(payload)}).catch(function(){});
+  }catch(e){}
+}
 function nowKST(){
   var d=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Seoul'}));
   function p(n){return (n<10?'0':'')+n;}
@@ -556,6 +572,7 @@ function submitForm(){
   var wtime=$('f-time').value;
   var btn=$('submitBtn'); btn.disabled=true; btn.textContent='전송 중...';
 
+  saveToSheet(name,phone,company,wtime);   // 구글시트 동시 저장(비차단)
   var msg=buildTGMessage(name,phone,company,wtime);
   var url='https://api.telegram.org/bot'+TG_TOKEN+'/sendMessage';
   var body='chat_id='+encodeURIComponent(TG_CHAT)+
