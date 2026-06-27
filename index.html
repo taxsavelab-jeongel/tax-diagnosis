@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>이익잉여금 출구전략 무료 정밀 진단 · 정엘가업승계연구소</title>
+<style>
+:root{
+  --bg:#FFFFFF; --navy:#1A2F5A; --navy2:#2E4E8A; --navy3:#3B6CC4;
+  --navy-l:#EBF0FA; --navy-l2:#D0DBF5;
+  --gray:#2D3748; --gray2:#4A5568; --gray3:#718096;
+  --bg2:#EDF2F7; --border:#CBD5E0;
+  --red:#C0392B; --orange:#E67E22; --green:#27AE60;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{background:var(--bg2);}
+body{
+  font-family:'Apple SD Gothic Neo','Malgun Gothic',-apple-system,BlinkMacSystemFont,sans-serif;
+  color:var(--gray); line-height:1.6; font-size:16px;
+}
+#app{max-width:420px;margin:0 auto;min-height:100vh;background:var(--bg);
+  position:relative;overflow:hidden;box-shadow:0 0 30px rgba(0,0,0,.06);}
+.screen{display:none;padding:24px 20px 120px;animation:fade .35s ease;}
+.screen.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+/* 고정 상담바 */
+.callbar{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:420px;
+  background:var(--navy);color:#fff;text-align:center;padding:12px;font-size:14px;font-weight:600;
+  z-index:50;letter-spacing:.2px;}
+.callbar a{color:#fff;text-decoration:none;}
+/* 타이포 */
+h1{font-size:24px;font-weight:800;color:var(--navy);line-height:1.35;letter-spacing:-.5px;}
+h2{font-size:19px;font-weight:800;color:var(--navy);margin-bottom:10px;letter-spacing:-.3px;}
+h3{font-size:16px;font-weight:700;color:var(--navy2);}
+p{color:var(--gray2);}
+.sub{color:var(--gray3);font-size:15px;}
+.small{font-size:12px;color:var(--gray3);line-height:1.5;}
+/* 카드 */
+.card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:14px;}
+.card-l{background:var(--navy-l);border:1px solid var(--navy-l2);border-radius:12px;padding:18px;margin-bottom:14px;}
+.card-warn{background:#FDEDEC;border:1.5px solid var(--red);border-radius:12px;padding:18px;margin-bottom:14px;}
+/* 배지 */
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;
+  padding:5px 12px;border-radius:20px;}
+.badge-trust{background:var(--navy-l);color:var(--navy2);}
+.grade{display:inline-flex;align-items:center;gap:7px;font-size:15px;font-weight:800;
+  padding:7px 16px;border-radius:24px;color:#fff;margin:6px 0;}
+/* 버튼 */
+.btn{display:block;width:100%;border:none;border-radius:12px;padding:17px;font-size:17px;font-weight:800;
+  cursor:pointer;font-family:inherit;letter-spacing:-.3px;transition:transform .08s;}
+.btn:active{transform:scale(.98);}
+.btn-primary{background:var(--navy2);color:#fff;}
+.btn-cta{background:linear-gradient(135deg,var(--navy2),var(--navy3));color:#fff;
+  box-shadow:0 6px 18px rgba(46,78,138,.35);}
+.btn-ghost{background:#fff;color:var(--navy2);border:1.5px solid var(--navy2);}
+.btn-call{background:var(--green);color:#fff;}
+.btn:disabled{background:var(--border);color:#fff;cursor:not-allowed;box-shadow:none;}
+/* 입력 */
+.q-num{font-size:13px;font-weight:700;color:var(--navy3);letter-spacing:1px;}
+.q-title{font-size:21px;font-weight:800;color:var(--navy);margin:6px 0 4px;line-height:1.35;letter-spacing:-.4px;}
+.q-help{font-size:13.5px;color:var(--gray3);margin-bottom:18px;display:flex;gap:6px;align-items:flex-start;}
+.q-help b{color:var(--orange);font-weight:700;}
+.in-wrap{position:relative;margin-bottom:8px;}
+input[type=number]{width:100%;font-size:24px;font-weight:700;color:var(--navy);text-align:right;
+  padding:16px 56px 16px 16px;border:1.5px solid var(--border);border-radius:12px;font-family:inherit;
+  outline:none;background:#fff;}
+input[type=number]:focus{border-color:var(--navy3);}
+input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.unit{position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:17px;font-weight:700;color:var(--gray3);}
+.opts{display:flex;flex-direction:column;gap:10px;}
+.opt{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--border);
+  border-radius:12px;padding:16px 18px;font-size:16px;font-weight:600;color:var(--gray);
+  cursor:pointer;font-family:inherit;transition:all .12s;}
+.opt:active{transform:scale(.99);}
+.opt.sel{border-color:var(--navy3);background:var(--navy-l);color:var(--navy);box-shadow:0 0 0 1px var(--navy3) inset;}
+.opt small{display:block;font-size:12.5px;color:var(--gray3);font-weight:500;margin-top:2px;}
+/* 진행바 */
+.prog{height:5px;background:var(--bg2);border-radius:4px;overflow:hidden;margin-bottom:22px;}
+.prog>div{height:100%;background:var(--navy3);transition:width .3s;}
+.nav{display:flex;gap:10px;margin-top:22px;}
+.nav .btn{flex:1;}
+.back{background:none;border:none;color:var(--gray3);font-size:14px;font-weight:600;cursor:pointer;
+  font-family:inherit;padding:8px 0;margin-bottom:4px;}
+/* 결과 표 */
+.row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--bg2);font-size:15px;}
+.row:last-child{border-bottom:none;}
+.row .k{color:var(--gray2);}
+.row .v{font-weight:800;color:var(--navy);}
+.bignum{font-size:34px;font-weight:900;color:var(--navy);letter-spacing:-1px;line-height:1.1;}
+.cmp{display:flex;gap:10px;margin-top:10px;}
+.cmp>div{flex:1;text-align:center;padding:14px 8px;border-radius:10px;}
+.cmp .bad{background:#FDEDEC;}
+.cmp .good{background:#EAF7EF;}
+.cmp .lbl{font-size:12px;color:var(--gray3);font-weight:600;}
+.cmp .amt{font-size:22px;font-weight:900;margin-top:3px;}
+.cmp .bad .amt{color:var(--red);}
+.cmp .good .amt{color:var(--green);}
+.dl-num{font-size:40px;font-weight:900;color:var(--red);letter-spacing:-1px;}
+.timeline{list-style:none;margin-top:8px;}
+.timeline li{position:relative;padding:7px 0 7px 18px;font-size:13.5px;color:var(--gray2);border-bottom:1px dashed var(--bg2);}
+.timeline li::before{content:'•';position:absolute;left:2px;color:var(--navy3);font-weight:900;}
+.timeline li b{color:var(--gray);}
+.risk{margin-bottom:14px;padding:13px 14px;background:#fff;border:1px solid var(--border);border-radius:10px;}
+.risk .rh{font-weight:800;color:var(--navy);font-size:15px;margin-bottom:4px;}
+.risk .rl{font-size:12px;color:var(--gray3);}
+.disclaim{font-size:11px;color:var(--gray3);line-height:1.6;background:var(--bg2);padding:14px;border-radius:10px;margin-top:8px;}
+/* 로딩 */
+.load-wrap{padding-top:60px;text-align:center;}
+.spin{width:54px;height:54px;border:4px solid var(--navy-l2);border-top-color:var(--navy3);
+  border-radius:50%;animation:rot 1s linear infinite;margin:0 auto 28px;}
+@keyframes rot{to{transform:rotate(360deg);}}
+.load-step{font-size:16px;color:var(--gray3);padding:9px;opacity:.4;transition:.3s;font-weight:600;}
+.load-step.on{opacity:1;color:var(--navy2);}
+.load-step.done{opacity:.7;color:var(--green);}
+.load-step.done::before{content:'✓ ';}
+/* 폼 */
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:14px;font-weight:700;color:var(--gray2);margin-bottom:7px;}
+.field input,.field select{width:100%;font-size:16px;padding:14px;border:1.5px solid var(--border);
+  border-radius:10px;font-family:inherit;outline:none;color:var(--gray);background:#fff;}
+.field input:focus,.field select:focus{border-color:var(--navy3);}
+.scarcity{font-size:13px;color:var(--orange);font-weight:700;text-align:center;margin:10px 0;}
+.cta-line{font-size:13.5px;color:var(--navy2);font-weight:600;text-align:center;margin-bottom:12px;line-height:1.5;}
+.trust-block{font-size:13.5px;color:var(--gray2);line-height:1.9;}
+.trust-block b{color:var(--navy);}
+.case{font-size:13.5px;color:var(--gray2);line-height:1.7;font-style:normal;
+  background:var(--navy-l);border-left:3px solid var(--navy3);padding:13px 15px;border-radius:0 8px 8px 0;}
+.center{text-align:center;}
+.mt{margin-top:14px;} .mt2{margin-top:24px;}
+.logo{font-size:13px;font-weight:800;color:var(--navy2);letter-spacing:.5px;}
+.hero{background:linear-gradient(160deg,var(--navy),var(--navy2));color:#fff;border-radius:16px;
+  padding:30px 22px;margin:10px 0 18px;}
+.hero h1{color:#fff;} .hero p{color:#D0DBF5;}
+.checkrow{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--gray2);margin:8px 0;font-weight:600;}
+.checkrow span{color:var(--green);font-weight:900;}
+.done-ico{width:74px;height:74px;border-radius:50%;background:var(--green);color:#fff;font-size:40px;
+  display:flex;align-items:center;justify-content:center;margin:30px auto 20px;}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ===== S0 랜딩 ===== -->
+  <section class="screen active" id="s0">
+    <div class="center"><span class="logo">정엘가업승계연구소</span></div>
+    <div class="hero">
+      <h1>우리 법인,<br>세금 없이 꺼낼 수 있을까?</h1>
+      <p class="mt">3분이면, 대표님 회사만의<br>출구전략 진단서가 나옵니다.</p>
+    </div>
+    <div class="checkrow"><span>✓</span> 미처분이익잉여금 정밀 분석</div>
+    <div class="checkrow"><span>✓</span> 소각 가능액·예상 절세액 즉시 산출</div>
+    <div class="checkrow"><span>✓</span> 자사주·가지급금 동시해소 진단</div>
+    <div class="center mt2"><span class="badge badge-trust">⚖️ 법령 근거 기반 정밀 진단 · 정엘가업승계연구소</span></div>
+    <button class="btn btn-primary mt2" onclick="start()">내 법인 진단 시작하기</button>
+  </section>
+
+  <!-- ===== S1~S9 질문 (동적) ===== -->
+  <section class="screen" id="sq">
+    <button class="back" onclick="prev()">← 이전</button>
+    <div class="prog"><div id="progbar" style="width:11%"></div></div>
+    <div class="q-num" id="qnum">Q1 / 9</div>
+    <div class="q-title" id="qtitle"></div>
+    <div class="q-help" id="qhelp"></div>
+    <div id="qbody"></div>
+    <div class="nav" id="qnav"></div>
+  </section>
+
+  <!-- ===== S10 로딩 ===== -->
+  <section class="screen" id="s10">
+    <div class="load-wrap">
+      <div class="spin"></div>
+      <h2 style="text-align:center">정밀 진단 중입니다</h2>
+      <p class="sub mt">블랙박스가 아닙니다. 한 줄 한 줄 계산합니다.</p>
+      <div class="mt2" style="text-align:left;max-width:300px;margin:24px auto 0">
+        <div class="load-step" id="ls0">이익잉여금·자본금 한도 분석 중</div>
+        <div class="load-step" id="ls1">배우자 공제 여력 확인 중</div>
+        <div class="load-step" id="ls2">최적 전략 매칭 중</div>
+        <div class="load-step" id="ls3">누진세율 절세액 계산 중</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== S11 결과 ===== -->
+  <section class="screen" id="s11"></section>
+
+  <!-- ===== S12 상담폼 ===== -->
+  <section class="screen" id="s12">
+    <button class="back" onclick="show('s11')">← 진단서로</button>
+    <h2>맞춤 절세 설계 신청</h2>
+    <p class="sub">아래 정보만 남기시면, 방금 만든 진단서가 그대로 소장님께 전달됩니다.</p>
+    <div class="card mt">
+      <div class="field"><label>대표님 성함</label><input id="f-name" type="text" placeholder="홍길동"></div>
+      <div class="field"><label>연락처</label><input id="f-phone" type="tel" placeholder="010-0000-0000"></div>
+      <div class="field"><label>회사명 (선택)</label><input id="f-company" type="text" placeholder="(주)○○"></div>
+      <div class="field"><label>희망 상담 시간</label>
+        <select id="f-time">
+          <option value="가능한 빨리">가능한 빨리</option>
+          <option value="오전(9-12시)">오전 (9–12시)</option>
+          <option value="오후(13-18시)">오후 (13–18시)</option>
+          <option value="저녁(18시 이후)">저녁 (18시 이후)</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-cta" id="submitBtn" onclick="submitForm()">진단서 전송하고 상담받기</button>
+    <a class="btn btn-call mt" href="tel:01055009632" style="text-decoration:none;text-align:center">📞 지금 바로 전화 (010-5500-9632)</a>
+    <p class="small mt" style="text-align:center">입력 정보는 상담 목적으로만 사용되며 제3자에 제공되지 않습니다.</p>
+  </section>
+
+  <!-- ===== S13 완료 ===== -->
+  <section class="screen" id="s13">
+    <div class="done-ico">✓</div>
+    <h2 style="text-align:center">진단 데이터가 전달되었습니다</h2>
+    <p class="sub center mt">대표님 진단 데이터가 소장님께 전달되었습니다.<br>24시간 내 직접 연락드립니다.</p>
+    <div class="card-l mt2 center">
+      <div class="logo">정엘가업승계연구소 · 소장 정선</div>
+      <p class="small mt">먼저 연락드리기 전에 통화를 원하시면</p>
+      <a class="btn btn-call mt" href="tel:01055009632" style="text-decoration:none;text-align:center">📞 010-5500-9632 즉시 연결</a>
+    </div>
+    <p class="small center mt2" id="sendnote"></p>
+  </section>
+
+  <div class="callbar">📞 상담 010-5500-9632 · <a href="tel:01055009632">바로 전화</a></div>
+</div>
+
+<script>
+"use strict";
+/* ============ 상태 ============ */
+var S = {retained:null,capital:null,gajigeumgeum:null,shareRatio:null,
+  spouse:null,giftHistory:null,treasury:null,industry:null,timeline:null};
+var R = {}; // 계산결과
+var qi = 0;
+
+/* ============ 유틸 ============ */
+function $(id){return document.getElementById(id);}
+function show(id){
+  var els=document.querySelectorAll('.screen');
+  for(var i=0;i<els.length;i++)els[i].classList.remove('active');
+  $(id).classList.add('active');
+  $('app').scrollTop=0; window.scrollTo(0,0);
+}
+function r1(n){return Math.round(n*10)/10;}     // 소수1자리
+function r0(n){return Math.round(n);}            // 정수
+function fmt(n){return (Math.round(n*10)/10).toLocaleString('ko-KR');}
+
+/* ============ §4-2 배당세금(억) — 2026 누진 ============ */
+function dividendTax(eok){
+  if(eok<=0) return 0;
+  var p=eok*10000; // 만원
+  var b=[[1400,.06,0],[5000,.15,126],[8800,.24,576],[15000,.35,1544],
+         [30000,.38,1994],[50000,.40,2594],[100000,.42,3594],[Infinity,.45,6594]];
+  for(var i=0;i<b.length;i++){
+    if(p<=b[i][0]) return (p*b[i][1]-b[i][2])*1.1/10000; // 지방세10% 포함, 억
+  }
+}
+
+/* ============ 질문 정의 ============ */
+var industries=['건설','제조','도소매','서비스','부동산임대','기타'];
+var QS=[
+ {key:'retained',type:'num',unit:'억',title:'미처분이익잉여금이 얼마나 쌓여 있나요?',
+  help:'이 금액이 클수록, 잘못 꺼내면 세금도 커집니다.'},
+ {key:'capital',type:'num',unit:'억',title:'자본금은 얼마인가요?',
+  help:'자본금이 소각 한도를 좌우합니다. 가장 중요한 숫자입니다.'},
+ {key:'gajigeumgeum',type:'num',unit:'억',title:'가지급금이 있나요? (없으면 0)',
+  help:'가지급금은 방치하면 인정이자(연 4.6%)가 계속 쌓입니다. (법인세법 시행령 §43②)'},
+ {key:'shareRatio',type:'num',unit:'%',title:'대표님 본인 지분율은?',
+  help:'본인 실현가능액과 균등소각 판단의 기준이 됩니다.'},
+ {key:'spouse',type:'opt',title:'배우자가 계신가요?',
+  help:'배우자 공제(6억)를 활용한 간접소각이 가능한지 판단합니다.',
+  opts:[['예','배우자 있음'],['아니오','배우자 없음']]},
+ {key:'giftHistory',type:'opt',title:'최근 10년 내 배우자에게 증여한 이력이 있나요?',
+  help:'증여공제 6억 한도의 잔여 여력을 확인합니다.',
+  opts:[['없음','전혀 없음'],['일부','일부 사용함'],['전부','6억 한도 모두 사용'],['해당없음','배우자 없음 등 해당 없음']]},
+ {key:'treasury',type:'opt',title:'법인이 보유한 자사주가 있나요?',
+  help:'자사주는 2026.3.6. 상법 개정으로 1년 내 의무 소각 대상입니다.',
+  opts:[['예','보유하고 있음'],['아니오','없음'],['모름','잘 모르겠음']]},
+ {key:'industry',type:'opt',title:'업종이 어떻게 되나요?',
+  help:'건설업 등은 면허 요건상 자본금 유지가 중요합니다.',
+  opts:[['건설','건설업'],['제조','제조업'],['도소매','도·소매업'],['서비스','서비스업'],['부동산임대','부동산임대업'],['기타','기타']]},
+ {key:'timeline',type:'opt',title:'은퇴·승계는 언제쯤 계획하시나요?',
+  help:'시점이 가까울수록 골든타임이 짧습니다.',
+  opts:[['1-3년','1~3년 내'],['3-5년','3~5년 내'],['5년+','5년 이상'],['미정','아직 미정']]}
+];
+
+/* ============ 진행 ============ */
+function start(){qi=0;renderQ();show('sq');}
+function renderQ(){
+  var q=QS[qi];
+  $('progbar').style.width=Math.round((qi+1)/9*100)+'%';
+  $('qnum').textContent='Q'+(qi+1)+' / 9';
+  $('qtitle').textContent=q.title;
+  $('qhelp').innerHTML='<b>?</b><span>'+q.help+'</span>';
+  var body='',nav='';
+  if(q.type==='num'){
+    var val=S[q.key]; val=(val===null||val===undefined)?'':val;
+    body='<div class="in-wrap"><input type="number" id="numin" inputmode="decimal" '+
+         'value="'+val+'" placeholder="0" oninput="onNum()"><span class="unit">'+q.unit+'</span></div>';
+    nav='<button class="btn btn-primary" id="nextBtn" onclick="next()" '+(val===''?'disabled':'')+'>다음 →</button>';
+  } else {
+    body='<div class="opts">';
+    for(var i=0;i<q.opts.length;i++){
+      var o=q.opts[i], sel=(S[q.key]===o[0])?' sel':'';
+      body+='<button class="opt'+sel+'" onclick="pick(\''+q.key+'\',\''+o[0]+'\')">'+o[0]+
+            '<small>'+o[1]+'</small></button>';
+    }
+    body+='</div>';
+    nav='';
+  }
+  $('qbody').innerHTML=body;
+  $('qnav').innerHTML=nav;
+  $('app').scrollTop=0;window.scrollTo(0,0);
+  if(q.type==='num'){var el=$('numin'); setTimeout(function(){el.focus();},120);}
+}
+function onNum(){
+  var v=$('numin').value;
+  S[QS[qi].key]= v===''?null:parseFloat(v);
+  $('nextBtn').disabled=(v==='');
+}
+function pick(key,val){
+  S[key]=val; renderQ();
+  setTimeout(next,180);
+}
+function next(){
+  if(qi<8){qi++;renderQ();}
+  else{runLoading();}
+}
+function prev(){
+  if(qi===0){show('s0');}
+  else{qi--;renderQ();}
+}
+
+/* ============ 로딩 → 계산 ============ */
+function runLoading(){
+  show('s10');
+  var ids=['ls0','ls1','ls2','ls3'];
+  for(var i=0;i<4;i++){$(ids[i]).className='load-step';}
+  var step=0;
+  $(ids[0]).className='load-step on';
+  var t=setInterval(function(){
+    $(ids[step]).className='load-step done';
+    step++;
+    if(step<4){$(ids[step]).className='load-step on';}
+    else{clearInterval(t); compute(); renderResult(); show('s11');}
+  },650);
+}
+
+/* ============ §3 판정 + §4 계산 ============ */
+function compute(){
+  var s=S;
+  // 자본금 0/미입력 처리
+  R.capitalWarn = (!s.capital || s.capital<=0);
+  var capForCalc = R.capitalWarn ? s.retained : s.capital;
+
+  // §4-1 한도
+  R.limit = Math.min(s.retained, capForCalc);
+  R.ownReal = R.limit * (s.shareRatio/100);
+
+  // §4-2,3 세금/절세
+  R.divTax = dividendTax(R.ownReal);
+  R.saving = R.divTax; // 소각 시 0원
+
+  // §3 전략
+  R.canIndirect = (s.spouse==='예') && (s.giftHistory==='없음' || s.giftHistory==='일부');
+  if(R.canIndirect){ R.code='A'; R.strategy='간접소각'; R.law='상증세법 §53(배우자 증여공제 6억) + 이월과세 회피 설계'; }
+  else {
+    R.code='B'; R.strategy='신이익소각'; R.law='상법 §343 (자본금 불변 — 면허·자본요건 유지)';
+  }
+  R.capitalMaintain = (s.industry==='건설'||s.industry==='부동산임대');
+
+  // §4-4 가지급금 동시해소
+  if(s.gajigeumgeum>0){
+    R.gjRepay=Math.min(R.ownReal, s.gajigeumgeum);
+    R.gjPersonal=R.ownReal-R.gjRepay;
+  }
+  // §4-5 소각 후 재무
+  R.afterRetained = s.retained - R.ownReal;
+
+  // 골든타임 점수
+  var sc=0;
+  if(s.treasury==='예')sc+=3;
+  if(s.timeline==='1-3년')sc+=2; else if(s.timeline==='3-5년')sc+=1;
+  if(s.gajigeumgeum>0)sc+=1;
+  if(s.retained>=50)sc+=1;
+  R.score=sc;
+  if(sc>=3){R.grade='긴급';R.gico='🔴';R.gcol='var(--red)';}
+  else if(sc>=1){R.grade='주의';R.gico='🟡';R.gcol='var(--orange)';}
+  else{R.grade='준비';R.gico='🟢';R.gcol='var(--green)';}
+
+  // 자사주 데드라인
+  R.dday=Math.ceil((new Date('2027-09-05')-new Date())/86400000);
+}
+
+/* ============ §A 개인화 진단문 (6+ 분기) ============ */
+function personalText(){
+  var s=S, ind=s.industry+'업'.replace('업업','업');
+  ind=s.industry; if(ind!=='부동산임대'&&ind!=='도소매'&&ind!=='서비스')ind=s.industry;
+  var indName = (s.industry==='기타')?'법인':(s.industry+'업').replace('업업','업');
+  if(s.industry==='건설')indName='종합건설업';
+  if(s.industry==='제조')indName='제조업';
+  if(s.industry==='도소매')indName='도·소매업';
+  if(s.industry==='서비스')indName='서비스업';
+  if(s.industry==='부동산임대')indName='부동산임대업';
+  if(s.industry==='기타')indName='법인';
+
+  var t='대표님은 '+indName+'을 운영하시며, 법인에 약 <b>'+fmt(s.retained)+'억 원</b>의 이익잉여금이 쌓여 있습니다. ';
+  var hard=[];
+  if(!R.canIndirect){
+    if(s.spouse!=='예') hard.push('배우자 공제를 쓸 수 없는 상황이라 일반적인 증여 방식은 막혀 있고');
+    else if(s.giftHistory==='전부') hard.push('배우자 증여공제 6억을 이미 모두 사용해 추가 공제 여력이 없고');
+  }
+  if(s.gajigeumgeum>0) hard.push('가지급금 '+fmt(s.gajigeumgeum)+'억 원까지 얽혀 있어');
+  if(s.treasury==='예') hard.push('자사주 의무소각 데드라인까지 맞물려 있어');
+  else if(s.treasury==='모름') hard.push('자사주 보유 여부부터 정리가 필요해');
+
+  if(hard.length>0){
+    t+= hard.join(', ')+' 일반적인 케이스보다 설계 난이도가 높습니다. 그래서 더더욱 <b>순서와 구조</b>가 중요합니다.';
+  } else if(R.canIndirect){
+    t+= '다행히 배우자 공제 여력이 남아 있어 간접소각으로 풀어갈 길이 열려 있습니다. 다만 증여 후 <b>1년</b>이라는 시간 요건이 있어, 늦을수록 선택지가 줄어듭니다.';
+  } else {
+    t+= '구조는 비교적 단순하지만, 절세 한도와 타이밍을 잘못 잡으면 같은 금액에도 세금이 크게 달라집니다. <b>순서가 곧 절세액</b>입니다.';
+  }
+  return t;
+}
+
+/* ============ 결과 렌더 ============ */
+function renderResult(){
+  var s=S;
+  var indHead = s.industry==='기타' ? '법인' :
+    ({'건설':'종합건설업','제조':'제조업','도소매':'도·소매업','서비스':'서비스업','부동산임대':'부동산임대업'}[s.industry]);
+  var h='';
+
+  /* [1] 개인화 헤더 */
+  h+='<div class="center" style="margin-bottom:6px"><span class="logo">정엘가업승계연구소 정밀 진단서</span></div>';
+  h+='<h1>'+indHead+' 대표님을 위한<br>출구전략 진단서</h1>';
+  h+='<div class="grade" style="background:'+R.gcol+'">'+R.gico+' 골든타임 '+R.grade+' (점수 '+R.score+')</div>';
+  h+='<div class="card-l"><p style="color:var(--gray)">'+personalText()+'</p></div>';
+
+  if(R.capitalWarn){
+    h+='<div class="card-warn"><h3 style="color:var(--red)">⚠️ 자본금 확인 필요</h3>'+
+       '<p class="small" style="color:var(--gray2)">자본금이 0 또는 미입력 상태라, 이익잉여금 기준으로 <b>잠정 계산</b>했습니다. 정확한 소각 한도는 자본금 확인 후 확정됩니다.</p></div>';
+  }
+
+  /* [2] 추천 전략 + 절세 */
+  h+='<div class="card"><div class="badge badge-trust">추천 전략 '+R.code+'</div>'+
+     '<h2 class="mt" style="margin-top:8px">'+R.strategy+'</h2>'+
+     '<p class="small">'+R.law+'</p>'+
+     '<div class="mt2 center"><div class="bignum">최대 약 '+fmt(R.saving)+'억 원</div>'+
+     '<p class="small mt">예상 절세액 (배당 대신 출구전략 적용 시)</p></div>'+
+     '<div class="cmp"><div class="bad"><div class="lbl">그냥 배당하면</div><div class="amt">'+fmt(R.divTax)+'억</div></div>'+
+     '<div class="good"><div class="lbl">출구전략 적용</div><div class="amt">0원</div></div></div>'+
+     '<p class="small mt">※ 소각 가능액을 단일 연도 1회 배당했다고 가정한 종합소득세 누진세율 기준 추정치입니다.</p></div>';
+
+  /* [3] 산정 근거 */
+  var capShow = R.capitalWarn ? (fmt(s.capital||0)+'억 (미확정)') : (fmt(s.capital)+'억');
+  h+='<div class="card"><h2>소각 가능액 산정 근거</h2>'+
+     '<div class="row"><span class="k">미처분이익잉여금</span><span class="v">'+fmt(s.retained)+'억</span></div>'+
+     '<div class="row"><span class="k">자본금</span><span class="v">'+capShow+'</span></div>'+
+     '<div class="row"><span class="k">→ 소각 한도 = MIN(둘 중 작은 값)</span><span class="v">'+fmt(R.limit)+'억</span></div>'+
+     '<div class="row"><span class="k">대표님 지분율</span><span class="v">'+fmt(s.shareRatio)+'%</span></div>'+
+     '<div class="row"><span class="k">→ 본인 실현가능액</span><span class="v" style="color:var(--navy3)">'+fmt(R.ownReal)+'억</span></div></div>';
+
+  /* [4] 닫히는 문 */
+  if(s.treasury==='예'){
+    h+='<div class="card-warn"><h3 style="color:var(--red)">⚠️ 자사주 강제 소각까지</h3>'+
+       '<div class="dl-num">D-'+R.dday+'</div>'+
+       '<p class="small mt" style="color:var(--gray2)">개정 상법 제341조의4 제1항(2026.3.6. 시행) 및 부칙 제2조 제1항에 따라, 기존 보유 자사주는 <b>2027년 9월 5일</b>까지 의무 소각해야 합니다. 그 전에 설계하지 않으면 선택권이 사라집니다.</p></div>';
+  }
+  h+='<div class="card"><h2>절세 카드는 매년 사라지고 있습니다</h2>'+
+     '<ul class="timeline">'+
+     '<li>임원 퇴직금 <b>3배수 → 2배수 축소</b> (2020.1.1., 소득세법 §22③)</li>'+
+     '<li>자사주 양도세 <b>10% → 3억 초과 25%</b> (2019.1.1., 소득세법 §104①11)</li>'+
+     '<li>인적분할 자사주 마법 <b>전면 금지</b> (2024.12.31. 상장 / 2026.3.6. 전체)</li>'+
+     '</ul><p class="small mt">신이익소각·신자본환원도 언제 막힐지 모릅니다. <b style="color:var(--navy2)">지금이 골든타임입니다.</b></p></div>';
+
+  /* [5] 혼자 하면 위험한 3가지 */
+  h+='<div class="card"><h2>혼자 하면 위험한 3가지</h2>'+
+     '<div class="risk"><div class="rh">① 균등소각을 안 지키면 → 증여세 폭탄</div>'+
+     '<p class="rl">모든 주주가 지분비율대로 소각에 참여하지 않으면, 상증세법 제39조의2에 따라 잔여주주에게 증여세가 부과됩니다.</p></div>'+
+     '<div class="risk"><div class="rh">② 증여 후 1년을 못 채우면 → 절세 전부 무효</div>'+
+     '<p class="rl">배우자 증여 후 1년 내 소각하면 이월과세로 원취득가가 환원돼 세금이 그대로 발생합니다. 타이밍 한 번 틀리면 끝입니다.</p></div>'+
+     '<div class="risk"><div class="rh">③ 순서를 틀리면 → 가지급금·자사주가 서로 발목</div>'+
+     '<p class="rl">어떤 걸 먼저 정리하느냐에 따라 결과가 완전히 달라집니다.</p></div></div>';
+
+  /* [6] 가지급금 동시해소 */
+  if(s.gajigeumgeum>0){
+    h+='<div class="card-l"><h2>가지급금 동시해소 시뮬레이션</h2>'+
+       '<p style="color:var(--gray)">소각대가 <b>'+fmt(R.ownReal)+'억</b>으로 가지급금 <b>'+fmt(R.gjRepay)+'억</b>을 해소하고, '+
+       '나머지 <b>'+fmt(R.gjPersonal)+'억</b>을 세금 없이 개인화할 수 있습니다.</p>'+
+       '<div class="row mt"><span class="k">가지급금 해소</span><span class="v">'+fmt(R.gjRepay)+'억</span></div>'+
+       '<div class="row"><span class="k">개인 인출 (세금 0원)</span><span class="v">'+fmt(R.gjPersonal)+'억</span></div></div>';
+  }
+
+  /* [7] 소각 후 재무 */
+  h+='<div class="card"><h2>소각 후 재무 변화</h2>'+
+     '<div class="row"><span class="k">이익잉여금</span><span class="v">'+fmt(s.retained)+'억 → '+fmt(R.afterRetained)+'억</span></div>'+
+     '<div class="row"><span class="k">자본금</span><span class="v">'+fmt(s.capital||0)+'억 (불변)</span></div>'+
+     '<p class="small mt">자본금이 그대로 유지되어 면허·자본요건에 영향이 없습니다.</p></div>';
+
+  /* [8] 사례 + 신뢰 */
+  h+='<div class="card"><h2>실제 설계 사례</h2>'+
+     '<div class="case">종합건설업 대표님은 배우자 공제가 불가했지만, 신자본환원으로 20억을 세금 없이 인출하고 가지급금까지 동시에 해소했습니다. 자본금은 그대로 유지되어 건설업 면허도 문제없었습니다.</div>'+
+     '<div class="trust-block mt2">'+
+     '<b>정엘가업승계연구소</b><br>'+
+     '• 비상장 중소기업 가업승계·출구전략 전문<br>'+
+     '• 법령 근거 기반 설계 (조문·시행일까지 검증)<br>'+
+     '• 이익잉여금·가지급금·자사주·차명주식 통합 솔루션</div></div>';
+
+  /* [9] CTA */
+  h+='<div class="card-l center">'+
+     '<p class="cta-line">이 진단서가 그대로 소장님께 전달됩니다.<br>추가 설명 없이 바로 맞춤 상담이 시작됩니다.</p>'+
+     '<button class="btn btn-cta" onclick="show(\'s12\')">내 법인 맞춤 절세 설계 받기</button>'+
+     '<a class="btn btn-call mt" href="tel:01055009632" style="text-decoration:none;text-align:center">📞 지금 바로 전화 상담</a>'+
+     '<p class="scarcity">이번 달 무료 정밀 진단은 선착순으로 운영됩니다.</p></div>';
+
+  /* 면책 */
+  h+='<div class="disclaim">본 진단은 일반 참고 정보이며 법적·세무 자문이 아닙니다. 절세액은 \'소각 가능액(자본금·배당가능이익 한도)을 단일 연도 1회 배당했다고 가정\'한 종합소득세 누진세율 기준 추정치이며, 주주 구성·배당 시기·정관·개별 세무 상황에 따라 달라집니다. 정확한 설계는 전문가 상담을 통해 확정하시기 바랍니다.</div>';
+
+  $('s11').innerHTML=h;
+}
+
+/* ============ §10 텔레그램 전송 ============ */
+var TG_TOKEN='8952423488:AAFt80Euv3D-XYySgyx2rr4q3MIp7NGojlM';
+var TG_CHAT='8842851328';
+function nowKST(){
+  var d=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Seoul'}));
+  function p(n){return (n<10?'0':'')+n;}
+  return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes());
+}
+function buildTGMessage(name,phone,company,wtime){
+  var s=S;
+  var urgent = (s.treasury==='예') ? '\n⚠️ 자사주 D-'+R.dday+' 임박 — 우선 연락 권장' : '';
+  var m=
+  '📋 *새 상담 신청 — 정엘가업승계연구소*\n'+
+  '🕐 '+nowKST()+' (KST)\n'+
+  '👤 '+name+' / '+phone+' / '+(company||'-')+' / 희망: '+wtime+'\n'+
+  '\n'+
+  '📊 추천전략: '+R.code+' '+R.strategy+'\n'+
+  '   법령: '+R.law+'\n'+
+  '   골든타임: '+R.gico+' '+R.grade+' (점수 '+R.score+')\n'+
+  '   소각가능액(한도): '+fmt(R.limit)+'억\n'+
+  '   본인 실현가능액: '+fmt(R.ownReal)+'억\n'+
+  '   예상 절세액: '+fmt(R.saving)+'억\n'+
+  '\n'+
+  '📝 잉여금 '+fmt(s.retained)+'억 / 자본금 '+fmt(s.capital||0)+'억 / 가지급금 '+fmt(s.gajigeumgeum)+'억\n'+
+  '   지분율 '+fmt(s.shareRatio)+'% / 배우자 '+s.spouse+' / 증여이력 '+s.giftHistory+'\n'+
+  '   자사주 '+s.treasury+' / 업종 '+s.industry+' / 은퇴시점 '+s.timeline+'\n'+
+  '\n'+
+  '🧮 소각가능액=MIN(잉여금,자본금)='+fmt(R.limit)+'억 / 배당세금(누진)='+fmt(R.divTax)+'억'+urgent;
+  return m;
+}
+function submitForm(){
+  var name=$('f-name').value.trim();
+  var phone=$('f-phone').value.trim();
+  if(!name){alert('성함을 입력해 주세요.');$('f-name').focus();return;}
+  if(!phone){alert('연락처를 입력해 주세요.');$('f-phone').focus();return;}
+  var company=$('f-company').value.trim();
+  var wtime=$('f-time').value;
+  var btn=$('submitBtn'); btn.disabled=true; btn.textContent='전송 중...';
+
+  var msg=buildTGMessage(name,phone,company,wtime);
+  var url='https://api.telegram.org/bot'+TG_TOKEN+'/sendMessage';
+  var body='chat_id='+encodeURIComponent(TG_CHAT)+
+           '&parse_mode=Markdown&text='+encodeURIComponent(msg);
+  fetch(url,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body})
+   .then(function(res){return res.json();})
+   .then(function(d){
+     if(d&&d.ok){ $('sendnote').textContent='✓ 정상 접수되었습니다.'; show('s13'); }
+     else{ tgFail(); }
+   })
+   .catch(function(){ tgFail(); })
+   .finally(function(){ btn.disabled=false; btn.textContent='진단서 전송하고 상담받기'; });
+}
+function tgFail(){
+  $('sendnote').innerHTML='전송이 지연되고 있습니다. 더 빠른 상담을 원하시면 <b>010-5500-9632</b>로 바로 전화 주세요.';
+  show('s13');
+}
+</script>
+</body>
+</html>
