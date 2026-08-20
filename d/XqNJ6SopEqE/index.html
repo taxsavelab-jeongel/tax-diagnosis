@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#ffffff">
+  <title>가업승계 두 개의 문 V1.1 | 정엘</title><link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip-link" href="#app">본문으로 바로가기</a>
+<header class="brand"><span class="brand-mark" aria-hidden="true">JEONGEL</span><span>정엘가업승계연구소</span></header>
+<main id="app" tabindex="-1">
+  <section id="intro" class="screen intro-screen" aria-labelledby="hero-title">
+    <p class="eyebrow">가업승계 · V1.1 안전 예비진단</p><h1 id="hero-title">우리 회사는<br><em>어느 문</em>을 먼저<br>열어야 할까요?</h1>
+    <div class="doors" aria-hidden="true"><div><b>상속의 문</b><span>현행법 확인</span></div><i>또는</i><div><b>증여의 문</b><span>현행법 확인</span></div></div>
+    <p class="lead">12개 법정 게이트 질문으로 두 문 준비도와 먼저 확인할 위험 3가지를 연락처 없이 보여드립니다.</p>
+    <ul class="trust-list"><li>정확한 생년월일·실명·상세 지분율 미수집</li><li>확인 필요는 유리하게 추정하지 않음</li><li>적용 확정이 아닌 우선 검토 경로</li></ul>
+    <button id="start-btn" class="primary">내 회사 두 문 진단하기 <span aria-hidden="true">→</span></button><p class="time-note">약 3분 · 언제든 뒤로 갈 수 있습니다</p>
+  </section>
+  <section id="question" class="screen" hidden aria-labelledby="question-title">
+    <div class="progress-copy"><span id="progress-text">1 / 12</span><span>V1.1 현행법 게이트</span></div>
+    <div class="progress-track" role="progressbar" aria-label="진단 진행률" aria-valuemin="1" aria-valuemax="12" aria-valuenow="1"><span id="progress-bar"></span></div>
+    <p class="eyebrow">해당 / 미해당 / 확인 필요</p><h2 id="question-title" tabindex="-1"></h2><p id="question-hint" class="hint"></p>
+    <div id="options" class="options" role="group" aria-labelledby="question-title"></div><button id="back-btn" class="back-btn">← 이전 질문</button><div class="sr-only" aria-live="polite" id="live-status"></div>
+  </section>
+  <section id="result" class="screen" hidden aria-labelledby="result-title">
+    <p class="eyebrow">연락처 없이 확인하는 현행법 결과</p><div class="result-badge"><span id="result-letter">A</span><span>예비진단</span></div>
+    <h2 id="result-title" tabindex="-1"></h2><p id="result-summary" class="lead"></p><p id="current-law-result" class="current-law"></p>
+    <div class="readiness-grid">
+      <article class="door-card"><span>01</span><h3>상속의 문</h3><strong id="inheritance-ready"></strong><p id="inheritance-reason"></p></article>
+      <article class="door-card"><span>02</span><h3>증여의 문</h3><strong id="gift-ready"></strong><p id="gift-reason"></p></article>
+    </div>
+    <div class="time-gap"><span>현행법 우선 경로</span><strong id="time-gap"></strong></div>
+    <aside id="monitoring-panel" class="monitoring" hidden><h3>2026년 정부안 모니터링 · requires_review</h3><p id="monitoring-notice"></p></aside>
+    <section class="result-section"><h3>먼저 확인할 위험 3가지</h3><ol id="blockers"></ol></section>
+    <section class="result-section action"><h3>지금 할 다음 행동</h3><p id="next-action"></p><small>30·60·90일은 법정기한이 아닌 권장 일정입니다.</small></section>
+    <details class="documents"><summary>준비할 서류 5개 보기</summary><ul id="documents"></ul></details>
+    <aside class="supplemental-benefit" aria-labelledby="supplemental-title">
+      <p class="eyebrow">결과형 보조혜택</p><h3 id="supplemental-title">무료 정관 점검 필요 여부 안내</h3>
+      <p>보조혜택 · 진단 결과상 필요 신호가 있으면 1페이지 리스크맵에서 무료 정관 점검 필요 여부도 함께 안내합니다.</p>
+      <p><strong id="supplemental-status"></strong><span id="supplemental-signals"></span></p><p id="supplemental-copy"></p><small id="supplemental-limits"></small>
+    </aside>
+    <aside class="report-offer"><p class="eyebrow">다음 단계</p><h3>회사 자료로 다시 확인하세요</h3><p>이 결과는 연락처를 받지 않는 예비진단입니다. 정관·의결권·지분 정비 신호가 있는 회사는 영상 설명란과 고정댓글의 무료 정관 점검 링크에서 별도로 신청할 수 있습니다.</p></aside><button id="restart-btn" class="text-btn">처음부터 다시 진단</button>
+  </section>
+  <section class="legal" aria-labelledby="legal-title"><h2 id="legal-title">법령 기준과 한계</h2>
+    <div><strong>현행법 기본 결과</strong><p>10년 경영·대상업종·연령·관계·종사·지분·사후관리 게이트를 확인합니다. 회사별 사실관계와 증빙 검토가 필요합니다.</p></div>
+    <div><strong>2026년 정부안 · requires_review</strong><p>정부안은 국회 심의·공포·시행령 과정에서 달라질 수 있습니다. 구체 숫자·기간은 requires_review이며 현행법 결과를 대체하지 않습니다.</p></div>
+    <p class="disclaimer">본 결과는 내부 프로토타입의 예비진단으로, 가업상속공제 또는 증여세 과세특례의 적용 가능성을 확정하지 않습니다. 세무사·변호사의 개별 검토가 필요합니다.</p>
+  </section>
+</main>
+<footer><b>JEONGEL</b><p>승계가 필요한 그 순간을 넘어, 진심을 담은 실력으로 보답하겠습니다</p><small>절세 그 이상의 가치 · 정보 제공용 예비진단</small></footer>
+<script src="offer-data.js"></script><script src="app.js"></script><script src="ui.js"></script>
+</body></html>
