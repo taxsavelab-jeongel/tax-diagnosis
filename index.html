@@ -518,8 +518,7 @@ function renderResult(){
 }
 
 /* ============ §10 텔레그램 전송 ============ */
-var TG_TOKEN='[REDACTED]';
-var TG_CHAT='8842851328';
+var RELAY_URL='https://jeongel-tax-diagnosis-relay.taxsavelab.workers.dev';
 var GS_URL='https://script.google.com/macros/s/AKfycbz_c7VEn5tzsiS1yRgO4X6beu0BegqSzFHTydlzV7hPOAtI8ZI0jcaATE3HUCKN0ZV0-g/exec';
 function saveToSheet(name,phone,company,wtime){
   try{
@@ -573,11 +572,17 @@ function submitForm(){
   var btn=$('submitBtn'); btn.disabled=true; btn.textContent='전송 중...';
 
   saveToSheet(name,phone,company,wtime);   // 구글시트 동시 저장(비차단)
-  var msg=buildTGMessage(name,phone,company,wtime);
-  var url='https://api.telegram.org/bot'+TG_TOKEN+'/sendMessage';
-  var body='chat_id='+encodeURIComponent(TG_CHAT)+
-           '&parse_mode=Markdown&text='+encodeURIComponent(msg);
-  fetch(url,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:body})
+  var payload={
+    name:name, phone:phone, company:company, wtime:wtime,
+    strategy:R.code+' '+R.strategy, law:R.law,
+    grade:R.gico+' '+R.grade, score:R.score,
+    limit:fmt(R.limit), ownReal:fmt(R.ownReal), saving:fmt(R.saving),
+    retained:fmt(S.retained), capital:fmt(S.capital||0), gaji:fmt(S.gajigeumgeum),
+    shareRatio:fmt(S.shareRatio), spouse:S.spouse, giftHistory:S.giftHistory,
+    treasury:S.treasury, industry:S.industry, timeline:S.timeline,
+    divTax:fmt(R.divTax), dday:R.dday
+  };
+  fetch(RELAY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
    .then(function(res){return res.json();})
    .then(function(d){
      if(d&&d.ok){ $('sendnote').textContent='✓ 정상 접수되었습니다.'; show('s13'); }
